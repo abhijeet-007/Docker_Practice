@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+      - postgres
+  redis:
+    image: "redis:alpine"
+    
+  python:
+    image: "python:3.8"
+    command: python app.py
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app.py
+    depends_on:
+      - redis
+      - postgres
+  postgres:
+    image: "postgres:alpine"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mydb
